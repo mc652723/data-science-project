@@ -22,7 +22,7 @@ the effect of body mass index (BMI) on cost.
 | BMI only raises cost for smokers | Each BMI point adds **$1,471** for smokers but **$76** for non-smokers; correlation with BMI is **0.81** vs **0.08** |
 | Age raises cost for both groups | About **+3.5%** per year of age; it never closes the smoking gap |
 | Region and children are weak | Region medians span only ~$1,300 and children show no monotone pattern |
-| A compact model generalises | Age, BMI, smoker, BMI × smoker, children, gender and region reach **held-out R² = 0.76** |
+| A compact model generalises | Age, BMI, smoker, BMI × smoker, children, gender and region reach **mean R² = 0.78 (SD 0.04)** across 10-fold cross-validation |
 
 ## Visualizations
 
@@ -69,8 +69,10 @@ The cleaned file is written to `data/medical_insurance_clean.csv` on every run.
 - A log-linear ordinary least-squares model, because charges are right-skewed and
   risk factors act multiplicatively. The design matrix includes an explicit
   **smoking × BMI interaction**.
-- An 80/20 hold-out split (seed 42) reports out-of-sample R²; the model is fitted with
-  NumPy `lstsq`, so no modelling library beyond NumPy is required.
+- An 80/20 hold-out split (seed 42) reports out-of-sample R², and a **10-fold
+  cross-validation** (every fold re-estimated from scratch) confirms the result is
+  stable rather than an artefact of one split. Both are fitted with NumPy `lstsq`,
+  so no modelling library beyond NumPy is required.
 
 ## Project structure
 
@@ -113,6 +115,9 @@ three figures. Every number quoted above is printed by the notebook.
   a sensitivity analysis would be the natural next step.
 - The model under-predicts the most expensive policies, so its error is largest where
   the financial risk is highest.
+- The model is deliberately simple. A gradient-boosted model compared against this
+  linear baseline under the same cross-validation is the next step; the current
+  estimate is already stabilised by ten folds.
 
 ## Licence
 
